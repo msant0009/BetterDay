@@ -12,6 +12,8 @@ struct ThingsView: View {
     
     @Query(filter: #Predicate<Thing> {$0.isHidden == false})private var things: [Thing]
     
+    @State private var showAddView: Bool = false
+    
     var body: some View {
         
         VStack(alignment: .leading, spacing: 20) {
@@ -24,16 +26,24 @@ struct ThingsView: View {
             List (things){thing in
                 Text(thing.title)
             }
+            .listStyle(.plain)
             Spacer()
             
             Button("Add New Thing") {
                 // todo: show sheet to add thing
+                showAddView.toggle()
             }
             .buttonStyle(.borderedProminent)
             .frame(maxWidth: .infinity,alignment: .center)
-        }
+        
         Spacer()
         
+    }
+    
+        .sheet(isPresented: $showAddView) {
+            AddThingView()
+                .presentationDetents([.fraction(0.2)])
+        }
     }
 }
 
